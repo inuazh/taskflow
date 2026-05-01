@@ -1,14 +1,11 @@
-import { Button } from "@/components/ui/button"
+import { UsersList } from "@/features/users/components/UsersList"
 
 function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-900 text-white">
-      <div className="flex flex-col items-center gap-4">
-        <h1 className="text-4xl font-bold">TaskFlow</h1>
-        <Button>Кнопка работает</Button>
-        <Button variant="outline">Outline</Button>
-        <Button variant="destructive">Destructive</Button>
-      </div>
+    <div className="min-h-screen bg-slate-900 p-8 text-white">
+      <h1 className="mb-6 text-3xl font-bold">TaskFlow</h1>
+      <h2 className="mb-2 text-xl">Команда</h2>
+      <UsersList />
     </div>
   )
 }
