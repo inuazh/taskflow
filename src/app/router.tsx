@@ -1,6 +1,6 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
-import { UsersList } from "@/features/users/components/UsersList"
+// import { UsersList } from "@/features/users/components/UsersList"
 import { TaskList } from "@/features/tasks/components/TaskList"
 import { z } from "zod"
 
@@ -37,11 +37,10 @@ const tasksRoute = createRoute({
 
 function TasksPage() {
     const {page, q} = tasksRoute.useSearch()
-    
   return (
     <>
-      <h2 className="mb-2 text-xl">Team</h2>
-      <UsersList />
+      {/* <h2 className="mb-2 text-xl">Team</h2>
+      <UsersList /> */}
 
       <h2 className="mt-8 mb-2 text-xl">Tasks</h2>
       <TaskList page={page} q={q}/>
