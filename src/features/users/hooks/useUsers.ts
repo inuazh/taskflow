@@ -6,6 +6,6 @@ export function useUsers() {
     return useQuery({
         queryKey: userKeys.all,
         queryFn: getUsers,
-        staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 25, // люди меняюься редко, переопределяем дефолт
     })
 }

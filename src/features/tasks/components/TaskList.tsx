@@ -1,11 +1,18 @@
 import { useTasks } from "../hooks/useTasks";
 
-export function TaskList() {
-    const {data, isLoading, isError} = useTasks({page:1, limit: 10})
+type TaskListProps = {
+    page: number,
+    q?: string,
+}
+
+export function TaskList({ page, q }: TaskListProps) {
+    const {data, isLoading, isError} = useTasks({page, limit: 10, q})
 
     if (isLoading) return <p>loading...</p>
     if (isError) return <p>error</p>
     if (data?.todos.length === 0) return <p>tasks is empty</p>
+
+
 
     return(
         <ul>

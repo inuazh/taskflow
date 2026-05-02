@@ -1,5 +1,5 @@
-import { UsersList } from "@/features/users/components/UsersList"
-import { TaskList } from "./features/tasks/components/TasksList"
+import { UsersList } from "@/features/users/components/UsersList";
+import { TaskList } from "./features/tasks/components/TaskList";
 
 function App() {
   return (
@@ -8,10 +8,10 @@ function App() {
       <h2 className="mb-2 text-xl">Team</h2>
       <UsersList />
 
-      <h2 className="mt-8 mb-2 text-x1">Tasks</h2>
-      <TaskList/>
+      <h2 className="text-x1 mt-8 mb-2">Tasks</h2>
+      <TaskList />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
