@@ -1,7 +1,8 @@
 import { useUsers } from "@/features/users/hooks/useUsers";
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { useCreateTask } from "../hooks/useCreateTask";
 import { Button } from "@/components/ui/button";
+// import type { CreateTaskParams } from "../api/createTask";
 
 export function CreateTaskForm() {
   const [todo, setTodo] = useState("");
@@ -10,7 +11,17 @@ export function CreateTaskForm() {
   const { data: users } = useUsers();
   const createMutation = useCreateTask();
 
-  handleSubmit
+  const handleSubmit =(e: SyntheticEvent <HTMLFormElement>)=> {
+    e.preventDefault();
+    if (!todo.trim() || userId === "") return
+
+    createMutation.mutate({ todo, completed: false, userId: userId as number}, {
+        onSuccess: () => {
+            setTodo("")
+            setUserId("")
+        }
+    })
+  }
 
   return (
     <form onSubmit={handleSubmit} className="mb-4 flex gap-2 items-center">
