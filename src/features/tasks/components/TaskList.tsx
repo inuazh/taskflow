@@ -8,12 +8,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getTasks } from "../api/getTasks";
 import { taskKeys } from "../api/queryKeys";
 
+
+
+
 type TaskListProps = {
   page: number;
   q?: string;
 };
 
 export function TaskList({ page, q }: TaskListProps) {
+
+  // const createMutation = useCreateTask();
+  // (window as any).createMutation = createMutation
+
   const navigate = useNavigate({ from: "/" });
   const limit = 10;
 

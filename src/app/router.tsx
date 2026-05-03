@@ -2,6 +2,7 @@ import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/re
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 // import { UsersList } from "@/features/users/components/UsersList"
 import { TaskList } from "@/features/tasks/components/TaskList"
+import { CreateTaskForm } from "@/features/tasks/components/CreateTaskForm"
 import { z } from "zod"
 
  /* eslint-disable react-refresh/only-export-components */
@@ -39,8 +40,8 @@ function TasksPage() {
     const {page, q} = tasksRoute.useSearch()
   return (
     <>
-      {/* <h2 className="mb-2 text-xl">Team</h2>
-      <UsersList /> */}
+     <h2 className="mt-8 mb-2 text-xl">create task</h2>
+     <CreateTaskForm />
 
       <h2 className="mt-8 mb-2 text-xl">Tasks</h2>
       <TaskList page={page} q={q}/>
