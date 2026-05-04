@@ -5,6 +5,8 @@ import {
 } from "../api/updateTaskStatus";
 import { taskKeys } from "../api/queryKeys";
 import type { TasksResponse } from "../api/types";
+import { toast } from "sonner";
+import { describe } from "zod/v4/core";
 
 export function useUpdateTaskStatus() {
   const queryClient = useQueryClient();
@@ -36,9 +38,13 @@ export function useUpdateTaskStatus() {
       context.previousData.forEach(([key, data]) => {
         queryClient.setQueryData(key as readonly unknown[], data);
       });
+
+      toast.error("failed to update status", {
+        description: "pls try again",
+      });
     },
     onSettled: () => {
-       queryClient.invalidateQueries({queryKey: taskKeys.all}) 
-    }
+      queryClient.invalidateQueries({ queryKey: taskKeys.all });
+    },
   });
 }

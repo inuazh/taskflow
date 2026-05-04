@@ -4,16 +4,13 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import { TaskList } from "@/features/tasks/components/TaskList"
 import { CreateTaskForm } from "@/features/tasks/components/CreateTaskForm"
 import { z } from "zod"
+import { Toaster } from "sonner"
 
  /* eslint-disable react-refresh/only-export-components */
-
- 
 const tasksSearchSchema = z.object({
     page: z.coerce.number().int().positive().default(1),
     q: z.string().optional(),
 })
-
-
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -24,6 +21,7 @@ function RootLayout() {
     <div className="min-h-screen bg-slate-900 p-8 text-white">
       <h1 className="mb-6 text-3xl font-bold">TaskFlow</h1>
       <Outlet />
+      <Toaster/>
       <TanStackRouterDevtools />
     </div>
   )

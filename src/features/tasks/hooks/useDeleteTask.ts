@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteTask } from "../api/deleteTask";
 import { taskKeys } from "../api/queryKeys";
 import type { TasksResponse } from "../api/types";
-
+import { toast } from "sonner";
 
 export function useDeleteTask() {
   const queryClient = useQueryClient();
@@ -18,28 +18,33 @@ export function useDeleteTask() {
 
       queryClient.setQueriesData<TasksResponse>(
         { queryKey: taskKeys.all },
-       (old)=> {
-        if(!old) return old
-         return {
+        (old) => {
+          if (!old) return old;
+          return {
             ...old,
-            todos: old.todos.filter((task)=> task.id !== id),
-        total: old.total -1,
-            } 
-        }
+            todos: old.todos.filter((task) => task.id !== id),
+            total: old.total - 1,
+          };
+        },
       );
 
-      return {previousData}
+      return { previousData };
     },
 
     onError: (_err, _params, context) => {
-      if (!context?.previousData) return
+      if (!context?.previousData) return;
       context.previousData.forEach(([key, data]) => {
-        queryClient.setQueryData(key, data)
-      })
+        queryClient.setQueryData(key, data);
+      });
+
+      toast.error('failed to delete task',{
+        description: "please try again",
+      }
+      )
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: taskKeys.all })
+      queryClient.invalidateQueries({ queryKey: taskKeys.all });
     },
   });
 }
