@@ -41,8 +41,8 @@ export function useCreateTask() {
       })
     },
 
-    // onSettled: () => {
-    //   queryClient.invalidateQueries({ queryKey: taskKeys.all })
-    // },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: taskKeys.all })
+    },
   })
 }

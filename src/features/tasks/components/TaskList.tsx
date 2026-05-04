@@ -3,13 +3,11 @@ import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getTasks } from "../api/getTasks";
 import { taskKeys } from "../api/queryKeys";
-
-
-
+import { useDeleteTask } from "../hooks/useDeleteTask";
 
 type TaskListProps = {
   page: number;
@@ -17,7 +15,6 @@ type TaskListProps = {
 };
 
 export function TaskList({ page, q }: TaskListProps) {
-
   // const createMutation = useCreateTask();
   // (window as any).createMutation = createMutation
 
@@ -27,6 +24,7 @@ export function TaskList({ page, q }: TaskListProps) {
   const { data, isLoading, isError, isFetching } = useTasks({ page, limit, q });
 
   const queryClient = useQueryClient();
+  const deleteMutation = useDeleteTask();
 
   useEffect(() => {
     if (!data) return;
@@ -66,7 +64,20 @@ export function TaskList({ page, q }: TaskListProps) {
 
       <ul className="space-y-1">
         {data.todos.map((task) => (
-          <li key={task.id}>{task.todo}</li>
+          <li
+            key={task.id}
+            className="flex items-center justify-between gap-2 py-1"
+          >
+            <span>{task.todo}</span>
+            <Button
+              variant="destructive"
+              size="sm"
+              disabled={deleteMutation.isPending}
+              onClick={() => deleteMutation.mutate(task.id)}
+            >
+              delete
+            </Button>
+          </li>
         ))}
       </ul>
 
