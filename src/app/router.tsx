@@ -5,6 +5,7 @@ import { TaskList } from "@/features/tasks/components/TaskList"
 import { CreateTaskForm } from "@/features/tasks/components/CreateTaskForm"
 import { z } from "zod"
 import { Toaster } from "sonner"
+import { SelectionBar } from "@/features/tasks/components/SelectionBar"
 
  /* eslint-disable react-refresh/only-export-components */
 const tasksSearchSchema = z.object({
@@ -40,6 +41,8 @@ function TasksPage() {
     <>
      <h2 className="mt-8 mb-2 text-xl">create task</h2>
      <CreateTaskForm />
+
+     <SelectionBar/>
 
       <h2 className="mt-8 mb-2 text-xl">Tasks</h2>
       <TaskList page={page} q={q}/>
