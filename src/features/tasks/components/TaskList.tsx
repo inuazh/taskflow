@@ -10,6 +10,7 @@ import { useDeleteTask } from "../hooks/useDeleteTask";
 import { useUpdateTaskStatus } from "../hooks/useUpdateTaskStatus";
 import { EditTaskForm } from "./EditTaskForm";
 import { useTasksUiStore } from "../store/tasksUiStore";
+import { useGlobalUiStore } from "@/shared/store/globalUiStore";
 
 type TaskListProps = {
   page: number;
@@ -27,7 +28,8 @@ export function TaskList({ page, q }: TaskListProps) {
   const editingId = useTasksUiStore((state) => state.editingId);
   const setEditingId = useTasksUiStore((state) => state.setEditingId);
   const toggleSelected = useTasksUiStore((state) => state.toggleSelected);
-  const selectedIds = useTasksUiStore((state) => state.selectedIds)
+  const selectedIds = useTasksUiStore((state) => state.selectedIds);
+  const density = useGlobalUiStore((state) => state.density);
 
   useEffect(() => {
     if (!data) return;
@@ -70,7 +72,12 @@ export function TaskList({ page, q }: TaskListProps) {
       <div className="mb-2 h-5 text-sm text-slate-400">{isFetching && "Updating..."}</div>
       <ul className="space-y-1">
         {data.todos.map((task) => (
-          <li key={task.id} className="flex items-center justify-between gap-2 py-1">
+          <li
+            key={task.id}
+            className={`flex items-center justify-between gap-2 ${
+              density === "compact" ? "py-0.5" : "py-3"
+            }`}
+          >
             {editingId === task.id ? (
               <EditTaskForm task={task} onClose={() => setEditingId(null)} />
             ) : (

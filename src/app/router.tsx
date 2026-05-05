@@ -1,11 +1,12 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
-// import { UsersList } from "@/features/users/components/UsersList"
 import { TaskList } from "@/features/tasks/components/TaskList"
 import { CreateTaskForm } from "@/features/tasks/components/CreateTaskForm"
 import { z } from "zod"
 import { Toaster } from "sonner"
 import { SelectionBar } from "@/features/tasks/components/SelectionBar"
+import { useGlobalUiStore } from "@/shared/store/globalUiStore"
+import { Button } from "@/components/ui/button"
 
  /* eslint-disable react-refresh/only-export-components */
 const tasksSearchSchema = z.object({
@@ -36,18 +37,38 @@ const tasksRoute = createRoute({
 });
 
 function TasksPage() {
-    const {page, q} = tasksRoute.useSearch()
+  const { page, q } = tasksRoute.useSearch()
+  const density = useGlobalUiStore((state) => state.density)
+  const setDensity = useGlobalUiStore((state) => state.setDensity)
+
   return (
     <>
-     <h2 className="mt-8 mb-2 text-xl">create task</h2>
-     <CreateTaskForm />
+      <div className="mb-4 flex gap-2">
+        <Button
+          size="sm"
+          variant={density === "compact" ? "default" : "secondary"}
+          onClick={() => setDensity("compact")}
+        >
+          Compact
+        </Button>
+        <Button
+          size="sm"
+          variant={density === "comfortable" ? "default" : "secondary"}
+          onClick={() => setDensity("comfortable")}
+        >
+          Comfortable
+        </Button>
+      </div>
 
-     <SelectionBar/>
+      <h2 className="mt-8 mb-2 text-xl">create task</h2>
+      <CreateTaskForm />
+
+      <SelectionBar />
 
       <h2 className="mt-8 mb-2 text-xl">Tasks</h2>
-      <TaskList page={page} q={q}/>
+      <TaskList page={page} q={q} />
     </>
-  );
+  )
 }
 
 const routeTree = rootRoute.addChildren([tasksRoute])
