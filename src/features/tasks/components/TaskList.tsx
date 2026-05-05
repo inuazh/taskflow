@@ -2,12 +2,13 @@ import { useTasks } from "../hooks/useTasks";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getTasks } from "../api/getTasks";
 import { taskKeys } from "../api/queryKeys";
 import { useDeleteTask } from "../hooks/useDeleteTask";
 import { useUpdateTaskStatus } from "../hooks/useUpdateTaskStatus";
+import { EditTaskForm } from "./EditTaskForm";
 
 type TaskListProps = {
   page: number;
@@ -21,6 +22,8 @@ export function TaskList({ page, q }: TaskListProps) {
   const queryClient = useQueryClient();
   const deleteMutation = useDeleteTask();
   const updateStatusMutation = useUpdateTaskStatus();
+
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!data) return;
@@ -60,43 +63,44 @@ export function TaskList({ page, q }: TaskListProps) {
 
   return (
     <>
-      <div className="mb-2 h-5 text-sm text-slate-400">
-        {isFetching && "Updating..."}
-      </div>
+      <div className="mb-2 h-5 text-sm text-slate-400">{isFetching && "Updating..."}</div>
       <ul className="space-y-1">
         {data.todos.map((task) => (
-          <li
-            key={task.id}
-            className="flex items-center justify-between gap-2 py-1"
-          >
-            <input
-              type="checkbox"
-              checked={task.completed}
-              disabled={updateStatusMutation.isPending}
-              onChange={(e) =>
-                updateStatusMutation.mutate({
-                  id: task.id,
-                  completed: e.target.checked,
-                })
-              }
-            />
-            <span>{task.todo}</span>
-            <Button
-              variant="destructive"
-              size="sm"
-              disabled={deleteMutation.isPending}
-              onClick={() => deleteMutation.mutate(task.id)}
-            >
-              delete
-            </Button>
+          <li key={task.id} className="flex items-center justify-between gap-2 py-1">
+            {editingId === task.id ? (
+              <EditTaskForm task={task} onClose={() => setEditingId(null)} />
+            ) : (
+              <>
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  disabled={updateStatusMutation.isPending}
+                  onChange={(e) =>
+                    updateStatusMutation.mutate({
+                      id: task.id,
+                      completed: e.target.checked,
+                    })
+                  }
+                />
+                <span className="flex-1">{task.todo}</span>
+                <Button size="sm" variant="secondary" onClick={() => setEditingId(task.id)}>
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={deleteMutation.isPending}
+                  onClick={() => deleteMutation.mutate(task.id)}
+                >
+                  Delete
+                </Button>
+              </>
+            )}
           </li>
         ))}
       </ul>
       <div className="mt-4 flex items-center gap-4">
-        <Button
-          disabled={page === 1}
-          onClick={() => navigate({ search: { page: page - 1 } })}
-        >
+        <Button disabled={page === 1} onClick={() => navigate({ search: { page: page - 1 } })}>
           Previous
         </Button>
         <span>
