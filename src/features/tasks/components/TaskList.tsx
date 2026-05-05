@@ -2,13 +2,14 @@ import { useTasks } from "../hooks/useTasks";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getTasks } from "../api/getTasks";
 import { taskKeys } from "../api/queryKeys";
 import { useDeleteTask } from "../hooks/useDeleteTask";
 import { useUpdateTaskStatus } from "../hooks/useUpdateTaskStatus";
 import { EditTaskForm } from "./EditTaskForm";
+import { useTasksUiStore } from "../store/tasksUiStore";
 
 type TaskListProps = {
   page: number;
@@ -23,7 +24,10 @@ export function TaskList({ page, q }: TaskListProps) {
   const deleteMutation = useDeleteTask();
   const updateStatusMutation = useUpdateTaskStatus();
 
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const editingId = useTasksUiStore((state) => state.editingId);
+  const setEditingId = useTasksUiStore((state) => state.setEditingId);
+  const toggleSelected = useTasksUiStore((state) => state.toggleSelected);
+  const selectedIds = useTasksUiStore((state) => state.selectedIds)
 
   useEffect(() => {
     if (!data) return;
@@ -71,6 +75,12 @@ export function TaskList({ page, q }: TaskListProps) {
               <EditTaskForm task={task} onClose={() => setEditingId(null)} />
             ) : (
               <>
+                <input
+                  type="checkbox"
+                  checked={selectedIds.includes(task.id)}
+                  onChange={() => toggleSelected(task.id)}
+                  className="mr-2"
+                />
                 <input
                   type="checkbox"
                   checked={task.completed}
