@@ -1,4 +1,4 @@
-import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router"
+import { createRootRoute, createRoute, createRouter, Outlet, useNavigate } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import { TaskList } from "@/features/tasks/components/TaskList"
 import { CreateTaskForm } from "@/features/tasks/components/CreateTaskForm"
@@ -7,6 +7,8 @@ import { Toaster } from "sonner"
 import { SelectionBar } from "@/features/tasks/components/SelectionBar"
 import { useGlobalUiStore } from "@/shared/store/globalUiStore"
 import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
+import { useDebounce } from "@/shared/hooks/useDebaunce"
 
  /* eslint-disable react-refresh/only-export-components */
 const tasksSearchSchema = z.object({
@@ -38,11 +40,33 @@ const tasksRoute = createRoute({
 
 function TasksPage() {
   const { page, q } = tasksRoute.useSearch()
+  const navigate = useNavigate({ from: "/" })
+  
   const density = useGlobalUiStore((state) => state.density)
   const setDensity = useGlobalUiStore((state) => state.setDensity)
 
+  const [searchInput, setSearchInput] = useState(q ?? "")
+  const debouncedSearch = useDebounce(searchInput, 300)
+
+  useEffect(() => {
+    navigate({
+      search: {
+        page: 1,
+        q: debouncedSearch || undefined,
+      },
+    })
+  }, [debouncedSearch, navigate])
+
   return (
     <>
+      <input
+        type="text"
+        placeholder="Search tasks..."
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        className="mb-4 w-full bg-slate-800 px-3 py-2 rounded text-white border border-slate-700"
+      />
+
       <div className="mb-4 flex gap-2">
         <Button
           size="sm"

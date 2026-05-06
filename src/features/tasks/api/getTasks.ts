@@ -9,13 +9,11 @@ export type GetTasksParams ={
 export async function getTasks(params: GetTasksParams): Promise<TasksResponse> {
 
 
-    const {page, limit, q} = params
+    const {page, limit} = params
 
     const skip =  (page-1) *limit
 
-    const url = q
-        ? `https://dummyjson.com/todos/search?q=${q}&limit=${limit}&skip=${skip}`
-        : `https://dummyjson.com/todos?limit=${limit}&skip=${skip}`
+     const url = `https://dummyjson.com/todos?limit=${limit}&skip=${skip}`
 
       const response = await fetch(url)
       

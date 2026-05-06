@@ -62,16 +62,23 @@ export function TaskList({ page, q }: TaskListProps) {
     );
   }
 
+    const filteredTodos = q
+  ? data?.todos.filter((task) =>
+      task.todo.toLowerCase().includes(q.toLowerCase())
+    )
+  : data?.todos
+
   if (isError) return <p>error</p>;
   if (!data) return null;
-  if (data.todos.length === 0 && page === 1) return <p>tasks is empty</p>;
+ if (filteredTodos?.length === 0) return <p>I found nothing</p>;
   const totalPages = Math.ceil(data.total / limit);
+
 
   return (
     <>
       <div className="mb-2 h-5 text-sm text-slate-400">{isFetching && "Updating..."}</div>
       <ul className="space-y-1">
-        {data.todos.map((task) => (
+        {filteredTodos?.map((task) => (
           <li
             key={task.id}
             className={`flex items-center justify-between gap-2 ${
